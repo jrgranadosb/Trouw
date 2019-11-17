@@ -41,11 +41,13 @@ if (isset($_GET['id'])) {
     $row = $get_data->fetch_assoc();
 }
 ?>
+
 <style>
     input{
         text-transform: none !important;
     }
 </style>
+
 <div class="container">
     <div class="show-on-small hide-on-large-only">
         <div class="minigap"></div>
@@ -80,15 +82,23 @@ if (isset($_GET['id'])) {
                 <input type="hidden" name="id" id="id" value="<?php echo $_GET['id']; ?>">
                 <input type="hidden" name="action" id="action" value="<?php if ($_GET['id'] > 0) { echo 'update'; } else { echo 'add'; } ?>">
 
+
                 <?php
-                $current_date = date('y-m');
-                $SQL = $db->query("SELECT * FROM spend_screen ORDER BY id DESC");
-                $num_row = $SQL->fetch_assoc();
+                  $SQL = $db->query("SELECT * FROM users WHERE id = $_USER ORDER BY id DESC");
+                  $user_row = $SQL->fetch_assoc();
+                ?>
+
+                <?php
+                  $current_date = date('y-m');
+                  $current_month = date('F');
+                  $current_year = date('Y');
+                  $SQL=$db->query("SELECT (count(*)+1000) total FROM spend_screen WHERE taxpayer_id = $user_row[taxpayer_id] and created_by = $user_row[id] and year = $current_year");
+                  $current_row = $SQL->fetch_assoc();
                 ?>
                 <div class="row">
 
                     <div class="input-field col s6">
-                        <input id="report_name" name="report_name" value="<?php echo $_USER.'-'.$current_date.'-'.str_pad(($num_row['id'] + 1), 4, '0', STR_PAD_LEFT);?>" readonly type="text" class="validate[required]">
+                        <input id="report_name" name="report_name" value="<?php echo $_USER.'-'.$current_date.'-'.$current_row['total'];?>" readonly type="text" class="validate[required]">
                         <label for="report_name">Nombre Reporte</label>
                     </div>
 
