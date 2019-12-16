@@ -92,6 +92,7 @@ if (isset($_GET['id'])) {
                   $current_date = date('y-m');
                   $current_month = date('F');
                   $current_year = date('Y');
+                  $SQL=$db->query("SELECT (count(*))+1000 total FROM (select distinct report_name from spend_screen WHERE taxpayer_id = $user_row[taxpayer_id] and created_by = $user_row[id] and year=$current_year) a");
                   $current_row = $SQL->fetch_assoc();
                 ?>
                 <div class="row">
